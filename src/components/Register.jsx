@@ -68,7 +68,7 @@ const Register = () => {
                 </button>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>Already registered?</p>
-                    <a href='src\components\Login.jsx' className='text-sm font-thin text-blue-600 hover:underline'>Login now</a>
+                    <a href='/login' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer'>Login now</a>
                 </div>
                 <ToastContainer />
             </div>

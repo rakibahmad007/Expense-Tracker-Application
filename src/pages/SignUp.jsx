@@ -12,9 +12,9 @@ const SignUp = () => {
     return (
         <div>
             {isLogin ? <Login /> : <Register />}
-            <button onClick={toggleForm}>
+            <a href="#" onClick={toggleForm}>
                 {isLogin ? 'Go to Register' : 'Go to Login'}
-            </button>
+            </a>
         </div>
     );
 };

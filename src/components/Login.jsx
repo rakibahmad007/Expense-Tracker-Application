@@ -22,7 +22,7 @@ const Login = () => {
                 <h2 className='text-3xl font-semibold text-left uppercase text-white mb-4'>Login</h2>
                 <h3 className='text-3xl text-left text-gray-400 uppercase mb-2'>Already registered?</h3>
                 <div className='flex justify-between w-[100%] mb-4'>
-                    <p className='text-sm font-thin text-gray-400'> Login if already our beloved user!</p>
+                    <p className='text-sm font-thin text-gray-400'> Login if you're already our beloved user!</p>
                     <p className='text-sm font-thin text-red-600'></p>
                 </div>
                 <div className='flex items-center gap-2 p-2 border border-gray-600 bg-gray-700 mb-4'>
@@ -53,7 +53,7 @@ const Login = () => {
                 </button>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>New here?</p>
-                    <a to='/register' className='text-sm font-thin text-blue-600 hover:underline'>Register now</a>
+                    <a href='/register' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</a>
                 </div>
                 <ToastContainer />
             </div>
