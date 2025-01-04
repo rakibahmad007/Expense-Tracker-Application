@@ -1,8 +1,7 @@
-import React from 'react'
-
-import  { useState } from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import { MdAlternateEmail } from 'react-icons/md'
-import { IoMdKey } from 'react-icons/io'
+import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom'
@@ -10,12 +9,25 @@ import { Link } from 'react-router-dom'
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
 
-    const handleLogin = () => {
+    const handleLogin = async (e) => {
+        e.preventDefault()
         if (!email || !password) {
             toast.error('Required fields')
         } else {
-            // Handle login logic here
+            try {
+                const response = await axios.post('http://localhost:3000/login', { email, password })
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token)
+                    window.location.href = '/dashboard'; // Redirect to dashboard or main page
+                } else {
+                    toast.error('Login failed: No token received')
+                }
+            } catch (error) {
+                console.error('Login failed', error)
+                toast.error('Login failed')
+            }
         }
     }
 
@@ -26,37 +38,45 @@ const Login = () => {
                 <h3 className='text-3xl text-left text-gray-400 uppercase mb-2'>Already registered?</h3>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'> Login if you're already our beloved user!</p>
-                    <p className='text-sm font-thin text-red-600'></p>
                 </div>
-                <div className='flex items-center gap-2 p-2 border border-gray-600 bg-gray-700 mb-4'>
-                    <MdAlternateEmail className='text-gray-400' />
-                    <input
-                        type="email"
-                        placeholder='Email Address'
-                        className='bg-gray-700 text-white placeholder-gray-400 outline-none'
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                </div>
-                <div className='flex items-center gap-2 p-2 border border-gray-600 bg-gray-700 mb-4'>
-                    <IoMdKey className='text-gray-400' />
-                    <input
-                        type="password"
-                        placeholder='Password'
-                        className='bg-gray-700 text-white placeholder-gray-400 outline-none'
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                <button
-                    onClick={handleLogin}
-                    className='w-full bg-blue-600 text-white py-2 mt-4 uppercase font-semibold hover:bg-blue-700 transition duration-300'
-                >
-                    Login
-                </button>
+                <form onSubmit={handleLogin}>
+                    <div className='flex items-center gap-2 p-2 border border-gray-600 bg-gray-700 mb-4'>
+                        <MdAlternateEmail className='text-gray-400' />
+                        <input
+                            type="email"
+                            placeholder='Email Address'
+                            className='bg-gray-700 text-white placeholder-gray-400 outline-none w-full'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                    </div>
+                    <div className='flex items-center gap-2 p-2 border border-gray-600 bg-gray-700 mb-4'>
+                        <IoMdKey className='text-gray-400' />
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder='Password'
+                            className='bg-gray-700 text-white placeholder-gray-400 outline-none w-full'
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className='text-gray-400 focus:outline-none'
+                        >
+                            {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+                        </button>
+                    </div>
+                    <button
+                        type="submit"
+                        className='w-full bg-blue-600 text-white py-2 mt-4 uppercase font-semibold hover:bg-blue-700 transition duration-300'
+                    >
+                        Login
+                    </button>
+                </form>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>New here?</p>
-                    <Link to='/signup' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</Link>
+                    <Link to='/register' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</Link>
                 </div>
                 <ToastContainer />
             </div>
