@@ -1,4 +1,4 @@
-import { HomeIcon, DocumentTextIcon, ChartPieIcon } from '@heroicons/react/24/outline';
+import { HomeIcon, DocumentTextIcon, ChartPieIcon } from '@heroicons/react/24/solid';
 
 export const categories = [
   { value: 'food', label: 'Food' },

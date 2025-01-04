@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
+
+import  { useState } from 'react'
 import { MdAlternateEmail } from 'react-icons/md'
 import { IoMdKey } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'

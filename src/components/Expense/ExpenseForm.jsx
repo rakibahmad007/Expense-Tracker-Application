@@ -1,10 +1,12 @@
+import React from 'react';
+
 import { ExpenseInput } from './ExpenseInput';
 import { ExpenseSelect } from './ExpenseSelect';
-import { categories } from '../../utils/constants';
+import { categories } from '../../utilities/constants';
 
 export function ExpenseForm({ expense, setExpense, onSubmit }) {
   return (
-    <form onSubmit={onSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+    <form onSubmit={onSubmit} className="bg-gray-800 shadow-lg rounded-lg px-8 pt-6 pb-8 mb-4">
       <ExpenseInput
         id="title"
         label="Title"
@@ -12,6 +14,7 @@ export function ExpenseForm({ expense, setExpense, onSubmit }) {
         value={expense.title}
         onChange={(value) => setExpense({ ...expense, title: value })}
         placeholder="Expense Title"
+        className="text-white bg-gray-700 border-gray-600"
       />
       
       <ExpenseInput
@@ -21,6 +24,7 @@ export function ExpenseForm({ expense, setExpense, onSubmit }) {
         value={expense.amount}
         onChange={(value) => setExpense({ ...expense, amount: value })}
         placeholder="Amount"
+        className="text-white bg-gray-700 border-gray-600"
       />
       
       <ExpenseSelect
@@ -29,6 +33,7 @@ export function ExpenseForm({ expense, setExpense, onSubmit }) {
         value={expense.category}
         onChange={(value) => setExpense({ ...expense, category: value })}
         options={categories}
+        className="text-white bg-gray-700 border-gray-600"
       />
       
       <ExpenseInput
@@ -37,11 +42,12 @@ export function ExpenseForm({ expense, setExpense, onSubmit }) {
         type="date"
         value={expense.date}
         onChange={(value) => setExpense({ ...expense, date: value })}
+        className="text-white bg-gray-700 border-gray-600"
       />
       
       <div className="flex items-center justify-end">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-blue-600 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           type="submit"
         >
           Add Expense

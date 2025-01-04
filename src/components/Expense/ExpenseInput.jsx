@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function ExpenseInput({ id, label, type, value, onChange, placeholder }) {
     return (
       <div className="mb-4">
@@ -14,4 +16,4 @@ export function ExpenseInput({ id, label, type, value, onChange, placeholder }) 
         />
       </div>
     );
-  }
+}
