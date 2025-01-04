@@ -5,6 +5,7 @@ import { MdAlternateEmail } from 'react-icons/md'
 import { IoMdKey } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Link } from 'react-router-dom'
 
 const Register = () => {
     const [email, setEmail] = useState('')
@@ -68,7 +69,7 @@ const Register = () => {
                 </button>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>Already registered?</p>
-                    <a href='/login' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer'>Login now</a>
+                    <Link to='/login' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer'>Login now</Link>
                 </div>
                 <ToastContainer />
             </div>

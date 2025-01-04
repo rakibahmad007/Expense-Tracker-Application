@@ -56,7 +56,7 @@ const Login = () => {
                 </button>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>New here?</p>
-                    <Link to='/register' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</Link>
+                    <Link to='/signup' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</Link>
                 </div>
                 <ToastContainer />
             </div>
