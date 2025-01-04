@@ -17,9 +17,9 @@ function Dashboard() {
         // Reset form
         setExpense({ title: '', amount: '', category: '', date: '' });
     };
-
+//w-screen h-screen bg-gray-900 flex items-center justify-center
     return (
-    <div className="max-w-4xl mx-auto bg-dark-contrast">
+    <div className="w-screen h-screen mx-auto flex items-center justify-center bg-gray-900 text-white">
         <div className="grid grid-cols-1 gap-6">
             <div>
                 <h2 className="text-2xl font-bold mb-6">Add New Expense</h2>
