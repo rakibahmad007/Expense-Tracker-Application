@@ -5,20 +5,20 @@ import Register from './components/Register';
 import Dashboard from './pages/Dashboard';
 import MainLayout from './Layout/MainLayout';
 
-const PrivateRoute = ({ element: Component, ...rest }) => {
-  const token = localStorage.getItem('token');
-  return token ? <Component {...rest} /> : <Navigate to="/login" />;
-};
+// const PrivateRoute = ({ element: Component, ...rest }) => {
+//   const token = localStorage.getItem('token');
+//   return token ? <Component {...rest} /> : <Navigate to="/login" />;
+// };
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Dashboard />} />
+        {/* <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/main" element={<MainLayout />} />
-        <Route path="/dashboard" element={<PrivateRoute element={Dashboard} />} />
+        <Route path="/main" element={<MainLayout />} /> */}
+        <Route path="/dashboard" element={<Dashboard/>} />
       </Routes>
     </Router>
   );

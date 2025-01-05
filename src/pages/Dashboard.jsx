@@ -1,40 +1,63 @@
-import React from 'react';
-import { useState } from 'react';
-import { ExpenseForm } from '../components/Expense/ExpenseForm';
-import { ExpenseTable } from '../components/Expense/ExpenseTable';
+// import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import ExpenseForm from '../components/Expense/ExpenseForm';
+import ExpenseList from '../components/Expense/ExpenseList';
 
 function Dashboard() {
-    const [expense, setExpense] = useState({ title: '', amount: '', category: '', date: '' });
-    const [expenses, setExpenses] = useState([]);
+//   const { user, logout } = useAuth();
+//   const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const newExpense = {
-            id: Date.now(), // Temporary ID solution until we have a backend
-            ...expense,
-        };
-        setExpenses([newExpense, ...expenses]);
-        // Reset form
-        setExpense({ title: '', amount: '', category: '', date: '' });
-    };
-//w-screen h-screen bg-gray-900 flex items-center justify-center
-    return (
-    <div className="max-h-screen mx-auto flex items-center justify-center bg-gray-900 text-white">
-        <div className="grid grid-cols-1 gap-6">
-            <div>
-                <h2 className="text-2xl font-bold mb-6">Add New Expense</h2>
-                <ExpenseForm 
-                    expense={expense} 
-                    setExpense={setExpense} 
-                    onSubmit={handleSubmit} 
-                />
+//   const handleLogout = () => {
+//     logout();
+//     navigate('/login');
+//   };
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <h1 className="text-xl font-semibold">Dashboard</h1>
+              {/* <button
+                onClick={() => navigate('/reports')}
+                className="text-indigo-600 hover:text-indigo-800"
+              >
+                View Reports
+              </button> */}
+              <button
+                onClick={() => navigate('/analytics')}
+                className="text-indigo-600 hover:text-indigo-800"
+              >
+                Analytics
+              </button>
             </div>
-            
-            <div>
-                <h2 className="text-2xl font-bold mb-6">Recent Expenses</h2>
-                <ExpenseTable expenses={expenses} />
-            </div>
+            {/* <div className="flex items-center">
+              <span className="mr-4">Welcome, {user?.name || user?.email}</span>
+              <button
+                onClick={handleLogout}
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-indigo-700"
+              >
+                Logout
+              </button>
+            </div> */}
+          </div>
         </div>
+      </nav>
+
+      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <div className="px-4 py-6 sm:px-0">
+          <div className="bg-white rounded-lg shadow p-6 mb-6">
+            <h2 className="text-lg font-medium mb-4">Add New Expense</h2>
+            <ExpenseForm />
+          </div>
+          
+          <div className="bg-white rounded-lg shadow p-6">
+            <h2 className="text-lg font-medium mb-4">Recent Expenses</h2>
+            <ExpenseList />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
