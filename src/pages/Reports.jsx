@@ -1,18 +1,17 @@
-import React from 'react';
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useExpenses } from '../components/Expense/ExpenseContext';
 import ExpenseForm from '../components/Expense/ExpenseForm';
 
 function Reports() {
   const navigate = useNavigate();
-const { expenses } = useExpenses();
+  const { expenses, deleteExpense } = useExpenses();
   const [dateRange, setDateRange] = useState({
     start: new Date(new Date().setDate(1)).toISOString().split('T')[0],
     end: new Date().toISOString().split('T')[0]
   });
   const [expandedDay, setExpandedDay] = useState(null);
+  const [editingExpense, setEditingExpense] = useState(null);
 
   const filteredExpenses = expenses.filter(expense => 
     expense.date >= dateRange.start && expense.date <= dateRange.end
@@ -29,6 +28,16 @@ const { expenses } = useExpenses();
   const totalExpense = filteredExpenses.reduce((sum, expense) => 
     sum + Number(expense.amount), 0
   );
+
+  const handleEdit = (expense) => {
+    setEditingExpense(expense);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm('Are you sure you want to delete this expense?')) {
+      deleteExpense(id);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-900">
@@ -103,11 +112,35 @@ const { expenses } = useExpenses();
                     <div className="mt-4 space-y-4">
                       {dayExpenses.map(expense => (
                         <div key={expense.id} className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                          <div>
-                            <p className="font-medium">{expense.description}</p>
-                            <p className="text-sm text-gray-500">{expense.category}</p>
-                          </div>
-                          <span className="font-medium">Tk. {Number(expense.amount).toFixed(2)}</span>
+                          {editingExpense?.id === expense.id ? (
+                            <ExpenseForm
+                              expense={expense}
+                              onSubmit={() => setEditingExpense(null)}
+                              onCancel={() => setEditingExpense(null)}
+                            />
+                          ) : (
+                            <>
+                              <div>
+                                <p className="font-medium">{expense.description}</p>
+                                <p className="text-sm text-gray-500">{expense.category}</p>
+                              </div>
+                              <div className="flex items-center space-x-2">
+                                <span className="font-medium">Tk. {Number(expense.amount).toFixed(2)}</span>
+                                <button
+                                  onClick={() => handleEdit(expense)}
+                                  className="text-indigo-600 hover:text-indigo-800"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => handleDelete(expense.id)}
+                                  className="text-red-600 hover:text-red-800"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </>
+                          )}
                         </div>
                       ))}
                       <div className="mt-4">
