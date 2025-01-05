@@ -4,11 +4,14 @@ import { MdAlternateEmail } from 'react-icons/md'
 import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const navigate = useNavigate();
+    const { login } = useAuth();
     const [showPassword, setShowPassword] = useState(false)
 
     const handleLogin = async (e) => {
@@ -17,19 +20,16 @@ const Login = () => {
             toast.error('Required fields')
         } else {
             try {
-                const response = await axios.post('http://localhost:3000/login', { email, password })
-                if (response.data.token) {
-                    localStorage.setItem('token', response.data.token)
-                    window.location.href = '/dashboard'; // Redirect to dashboard or main page
-                } else {
-                    toast.error('Login failed: No token received')
-                }
+                await login({ email, password });
+                navigate('/');
             } catch (error) {
                 console.error('Login failed', error)
                 toast.error('Login failed')
             }
         }
     }
+
+
 
     return (
         <div className='w-screen h-screen bg-gray-900 flex items-center justify-center'>

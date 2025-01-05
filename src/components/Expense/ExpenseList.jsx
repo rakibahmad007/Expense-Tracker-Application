@@ -37,7 +37,7 @@ function ExpenseList() {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="font-medium">${expense.amount}</span>
+                <span className="font-medium">Tk. {expense.amount}</span>
                 <button
                   onClick={() => handleEdit(expense)}
                   className="text-indigo-600 hover:text-indigo-800"

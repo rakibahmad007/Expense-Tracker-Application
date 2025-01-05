@@ -1,26 +1,53 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider, useAuth } from './components/AuthContext';
+import { ExpenseProvider } from './components/Expense/ExpenseContext';
 import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './pages/Dashboard';
-import MainLayout from './Layout/MainLayout';
+import Reports from './pages/Reports';
+import Analytics from './pages/Analytics';
 
-// const PrivateRoute = ({ element: Component, ...rest }) => {
-//   const token = localStorage.getItem('token');
-//   return token ? <Component {...rest} /> : <Navigate to="/login" />;
-// };
+const PrivateRoute = ({ children }) => {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? children : <Navigate to="/login" />;
+};
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        {/* <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/main" element={<MainLayout />} /> */}
-        <Route path="/dashboard" element={<Dashboard/>} />
-      </Routes>
-    </Router>
+    <AuthProvider>
+      <ExpenseProvider>
+        <Router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <PrivateRoute>
+                  <Reports />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/analytics"
+              element={
+                <PrivateRoute>
+                  <Analytics />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </ExpenseProvider>
+    </AuthProvider>
   );
 }
 

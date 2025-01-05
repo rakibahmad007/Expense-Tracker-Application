@@ -3,32 +3,35 @@ import axios from 'axios'
 import { MdAlternateEmail } from 'react-icons/md'
 import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'
-import { Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from './AuthContext'
 
 const Register = () => {
-    const [email, setEmail] = useState('')
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const [showPassword, setShowPassword] = useState(false)
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
+    const { register } = useAuth();
 
     const handleRegister = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!email || !username || !password || !confirmPassword) {
-            toast.error('Required fields')
+            toast.error('Required fields');
         } else if (password !== confirmPassword) {
-            toast.error('Passwords do not match')
+            toast.error('Passwords do not match');
         } else {
             try {
-                await axios.post('http://localhost:3000/register', { email, username, password })
-                toast.success('Registration successful')
-                // Redirect to login page or show success message
+                await register({ email, username, password });
+                toast.success('Registration successful');
+                navigate('/');
             } catch (error) {
-                console.error('Registration failed', error)
-                toast.error('Registration failed')
+                console.error('Registration failed', error);
+                toast.error('Registration failed');
             }
         }
-    }
+    };
 
     return (
         <div className='w-screen h-screen bg-gray-900 flex items-center justify-center'>
@@ -96,7 +99,7 @@ const Register = () => {
                 <ToastContainer />
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Register

@@ -26,7 +26,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700">Date</label>
+        <label className="block text-sm font-medium text-white">Date</label>
         <input
           type="date"
           value={formData.date}
@@ -36,7 +36,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Description</label>
+        <label className="block text-sm font-medium text-white">Description</label>
         <input
           type="text"
           value={formData.description}
@@ -46,7 +46,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Amount</label>
+        <label className="block text-sm font-medium text-white">Amount</label>
         <input
           type="number"
           value={formData.amount}
@@ -56,7 +56,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-gray-700">Category</label>
+        <label className="block text-sm font-medium text-white">Category</label>
         <select
           value={formData.category}
           onChange={(e) => setFormData({ ...formData, category: e.target.value })}
@@ -68,6 +68,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
           <option value="transport">Transport</option>
           <option value="utilities">Utilities</option>
           <option value="entertainment">Entertainment</option>
+          <option value="sports">Sports</option>
           <option value="other">Other</option>
         </select>
       </div>

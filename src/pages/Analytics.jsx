@@ -2,7 +2,7 @@ import React from 'react'
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useExpenses } from '../contexts/ExpenseContext';
+import { useExpenses } from '../components/Expense/ExpenseContext';
 import { Pie, Bar } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -93,12 +93,12 @@ function Analytics() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <nav className="bg-white shadow-sm mb-6">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <h1 className="text-xl font-semibold">Expense Analytics</h1>
+              <h1 className="text-xl font-semibold text-white">Expense Analytics</h1>
             </div>
             <div className="flex items-center">
               <button
@@ -114,15 +114,15 @@ function Analytics() {
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-medium mb-4">Expense Distribution by Category</h2>
+          <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
+            <h2 className="text-lg font-medium mb-4 text-white">Expense Distribution by Category</h2>
             <div className="aspect-square">
               <Pie data={pieChartData} />
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-medium mb-4">Monthly Expense Trend & Forecast</h2>
+          <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
+            <h2 className="text-lg font-medium mb-4 text-white">Monthly Expense Trend & Forecast</h2>
             <Bar options={barChartOptions} data={barChartData} />
           </div>
         </div>
