@@ -2,20 +2,25 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useExpenses } from '../components/Expense/ExpenseContext';
 import ExpenseForm from '../components/Expense/ExpenseForm';
+import axios from 'axios';
 
 function Reports() {
   const navigate = useNavigate();
   const { expenses, deleteExpense } = useExpenses();
+  console.log('Expenses in Reports:', expenses); // Debug log
+
   const [dateRange, setDateRange] = useState({
-    start: new Date(new Date().setDate(1)).toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0]
+    start: new Date(new Date().setDate(1)).toISOString().split('T')[0], // First day of the current month
+    end: new Date().toISOString().split('T')[0] // Current date
   });
   const [expandedDay, setExpandedDay] = useState(null);
   const [editingExpense, setEditingExpense] = useState(null);
 
-  const filteredExpenses = expenses.filter(expense => 
-    expense.date >= dateRange.start && expense.date <= dateRange.end
-  );
+  const filteredExpenses = expenses.filter(expense => {
+    const expenseDate = new Date(expense.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+    return expenseDate >= dateRange.start && expenseDate <= dateRange.end;
+  });
+  console.log('Filtered Expenses:', filteredExpenses); // Debug log
 
   const groupedExpenses = filteredExpenses.reduce((acc, expense) => {
     if (!acc[expense.date]) {
@@ -29,8 +34,37 @@ function Reports() {
     sum + Number(expense.amount), 0
   );
 
-  const handleEdit = (expense) => {
-    setEditingExpense(expense);
+  const handleEdit = async (updatedExpense) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `http://localhost:5000/api/expenses/${updatedExpense._id}`,
+        updatedExpense,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      // Update the expense in the local state
+      setExpenses(expenses.map(expense =>
+        expense._id === updatedExpense._id ? response.data : expense
+      ));
+      setEditingExpense(null); // Close the edit form
+    } catch (error) {
+      console.error('Error updating expense:', error);
+    }
+  };
+
+  const handleAddExpense = async (newExpense) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post('http://localhost:5000/api/expenses', newExpense, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Add the new expense to the local state
+      setExpenses([...expenses, response.data]);
+    } catch (error) {
+      console.error('Error adding expense:', error);
+    }
   };
 
   const handleDelete = (id) => {
@@ -115,7 +149,7 @@ function Reports() {
                           {editingExpense?.id === expense.id ? (
                             <ExpenseForm
                               expense={expense}
-                              onSubmit={() => setEditingExpense(null)}
+                              onSubmit={handleEdit}
                               onCancel={() => setEditingExpense(null)}
                             />
                           ) : (
@@ -127,7 +161,7 @@ function Reports() {
                               <div className="flex items-center space-x-2">
                                 <span className="font-medium">Tk. {Number(expense.amount).toFixed(2)}</span>
                                 <button
-                                  onClick={() => handleEdit(expense)}
+                                  onClick={() => setEditingExpense(expense)}
                                   className="text-indigo-600 hover:text-indigo-800"
                                 >
                                   Edit
@@ -145,7 +179,11 @@ function Reports() {
                       ))}
                       <div className="mt-4">
                         <h4 className="font-medium mb-2">Add New Expense for {new Date(date).toLocaleDateString()}</h4>
-                        <ExpenseForm expense={{ date }} />
+                        <ExpenseForm
+                          expense={{ date }}
+                          onSubmit={handleAddExpense}
+                          onCancel={() => setEditingExpense(null)}
+                        />
                       </div>
                     </div>
                   )}

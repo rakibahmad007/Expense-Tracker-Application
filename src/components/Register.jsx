@@ -27,7 +27,7 @@ const Register = () => {
                 const response = await axios.post('http://localhost:5000/api/auth/register', { email, password });
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
-                    navigate('/dashboard'); // Redirect to dashboard or main page
+                    navigate('/dashboard'); 
                 } else {
                     toast.error('Registration failed: No token received');
                 }

@@ -1,39 +1,41 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { MdAlternateEmail } from 'react-icons/md'
-import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from './AuthContext'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { MdAlternateEmail } from 'react-icons/md';
+import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 const Login = () => {
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
-    const [showPassword, setShowPassword] = useState(false)
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e) => {
-        e.preventDefault()
+        e.preventDefault();
         if (!email || !password) {
-            toast.error('Required fields')
+            toast.error('Required fields');
         } else {
             try {
                 const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
-                    navigate('/dashboard'); // Redirect to dashboard or main page
+                    login(response.data.token); 
+                    console.log('Token received. Redirecting to /dashboard...'); 
+                    navigate('/dashboard');
                 } else {
+                    console.error('Login failed: No token received'); 
                     toast.error('Login failed: No token received');
                 }
             } catch (error) {
+                console.error('Login error:', error); 
                 toast.error('Login failed: ' + error.message);
             }
         }
-    }
-
-
+    };
 
     return (
         <div className='w-screen h-screen bg-gray-900 flex items-center justify-center'>
@@ -85,7 +87,7 @@ const Login = () => {
                 <ToastContainer />
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;
