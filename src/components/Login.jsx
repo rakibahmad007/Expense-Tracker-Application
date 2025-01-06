@@ -20,11 +20,15 @@ const Login = () => {
             toast.error('Required fields')
         } else {
             try {
-                await login({ email, password });
-                navigate('/');
+                const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                    navigate('/dashboard'); // Redirect to dashboard or main page
+                } else {
+                    toast.error('Login failed: No token received');
+                }
             } catch (error) {
-                console.error('Login failed', error)
-                toast.error('Login failed')
+                toast.error('Login failed: ' + error.message);
             }
         }
     }

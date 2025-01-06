@@ -5,6 +5,7 @@ import { IoMdKey, IoMdEye, IoMdEyeOff } from 'react-icons/io'
 import { ToastContainer, toast } from 'react-toastify'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from './AuthContext'
+import 'react-toastify/dist/ReactToastify.css';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -23,12 +24,15 @@ const Register = () => {
             toast.error('Passwords do not match');
         } else {
             try {
-                await register({ email, username, password });
-                toast.success('Registration successful');
-                navigate('/');
+                const response = await axios.post('http://localhost:5000/api/auth/register', { email, password });
+                if (response.data.token) {
+                    localStorage.setItem('token', response.data.token);
+                    navigate('/dashboard'); // Redirect to dashboard or main page
+                } else {
+                    toast.error('Registration failed: No token received');
+                }
             } catch (error) {
-                console.error('Registration failed', error);
-                toast.error('Registration failed');
+                toast.error('Registration failed: ' + error.message);
             }
         }
     };
