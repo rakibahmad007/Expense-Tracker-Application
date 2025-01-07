@@ -31,9 +31,12 @@ export const ExpenseProvider = ({ children }) => {
         setExpenses([...expenses, response.data]);
     };
 
+    
     const updateExpense = async (id, updatedExpense) => {
+        console.log(updatedExpense);
+        console.log(id);
         const token = localStorage.getItem('token');
-        const response = await axios.put(`http://localhost:5000/api/expenses/${id}`, updatedExpense, {
+        const response = await axios.put(`${import.meta.env.VITE_SERVER_URL}/api/expenses/${id}`, updatedExpense, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setExpenses(expenses.map(expense => (expense._id === id ? response.data : expense)));
@@ -41,7 +44,7 @@ export const ExpenseProvider = ({ children }) => {
 
     const deleteExpense = async (id) => {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+        await axios.delete(`${import.meta.env.VITE_SERVER_URL}/api/expenses/${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         setExpenses(expenses.filter(expense => expense._id !== id));

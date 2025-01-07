@@ -4,6 +4,7 @@ import { useExpenses } from './ExpenseContext';
 function ExpenseForm({ expense, onSubmit, onCancel }) {
   const { addExpense, updateExpense } = useExpenses();
   const [formData, setFormData] = useState({
+    _id: expense?._id || null,
     date: expense?.date ? new Date(expense.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     description: expense?.description || '',
     amount: expense?.amount || '',
@@ -31,6 +32,8 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(formData);
+    console.log(expense);
     const updatedExpense = {
       ...formData,
       date: new Date(formData.date).toISOString() // Ensure the date is correctly formatted
@@ -40,7 +43,7 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
     } else {
       addExpense(updatedExpense);
     }
-    onSubmit?.();
+    onSubmit?.(updatedExpense);
     setFormData({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: '' });
   };
 

@@ -36,6 +36,7 @@ function Reports() {
 
   const handleEdit = async (updatedExpense) => {
     try {
+      console.log(updatedExpense);
       const token = localStorage.getItem('token');
       const response = await axios.put(
         `http://localhost:5000/api/expenses/${updatedExpense._id}`,
