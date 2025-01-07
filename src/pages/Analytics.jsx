@@ -92,6 +92,50 @@ function Analytics() {
     }
   };
 
+  // Calculate daily totals for the last 7 days
+  const dailyData = expenses.reduce((acc, expense) => {
+    const date = new Date(expense.date);
+    const day = date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
+    acc[day] = (acc[day] || 0) + Number(expense.amount);
+    return acc;
+  }, {});
+
+  // Forecast next week's expenses (simple average-based forecast)
+  const dailyValues = Object.values(dailyData);
+  const averageDailyExpense = dailyValues.length > 0 
+    ? dailyValues.reduce((a, b) => a + b) / dailyValues.length 
+    : 0;
+
+  const nextWeekDates = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date();
+    date.setDate(date.getDate() + i + 1);
+    return date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
+  });
+
+  const weeklyBarChartData = {
+    labels: nextWeekDates,
+    datasets: [
+      {
+        label: 'Predicted Daily Expenses',
+        data: Array(7).fill(averageDailyExpense),
+        backgroundColor: '#FF6384'
+      }
+    ]
+  };
+
+  const weeklyBarChartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Predicted Daily Expenses for Next Week'
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900">
       <nav className="bg-gray-800 shadow-sm">
@@ -124,6 +168,11 @@ function Analytics() {
           <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
             <h2 className="text-lg font-medium mb-4 text-white">Monthly Expense Trend & Forecast</h2>
             <Bar options={barChartOptions} data={barChartData} />
+          </div>
+
+          <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
+            <h2 className="text-lg font-medium mb-4 text-white">Predicted Daily Expenses for Next Week</h2>
+            <Bar options={weeklyBarChartOptions} data={weeklyBarChartData} />
           </div>
         </div>
       </main>

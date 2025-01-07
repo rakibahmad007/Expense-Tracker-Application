@@ -21,10 +21,11 @@ function Reports() {
   });
 
   const groupedExpenses = filteredExpenses.reduce((acc, expense) => {
-    if (!acc[expense.date]) {
-      acc[expense.date] = [];
+    const expenseDate = new Date(expense.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+    if (!acc[expenseDate]) {
+      acc[expenseDate] = [];
     }
-    acc[expense.date].push(expense);
+    acc[expenseDate].push(expense);
     return acc;
   }, {});
 

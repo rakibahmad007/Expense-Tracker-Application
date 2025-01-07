@@ -21,8 +21,8 @@ function ExpenseList() {
   return (
     <div className="space-y-4">
       {expenses.map(expense => (
-        <div key={expense.id} className="bg-white p-4 rounded-lg shadow">
-          {editingExpense?.id === expense.id ? (
+        <div key={expense._id} className="bg-white p-4 rounded-lg shadow">
+          {editingExpense?._id === expense._id ? (
             <ExpenseForm
               expense={expense}
               onSubmit={() => setEditingExpense(null)}
@@ -37,7 +37,7 @@ function ExpenseList() {
                 </p>
               </div>
               <div className="flex items-center space-x-2">
-                <span className="font-medium">Tk. {expense.amount}</span>
+                <span className="font-medium">Tk. {Number(expense.amount).toFixed(2)}</span>
                 <button
                   onClick={() => handleEdit(expense)}
                   className="text-indigo-600 hover:text-indigo-800"
@@ -45,7 +45,7 @@ function ExpenseList() {
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(expense.id)}
+                  onClick={() => handleDelete(expense._id)}
                   className="text-red-600 hover:text-red-800"
                 >
                   Delete

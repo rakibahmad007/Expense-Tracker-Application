@@ -1,23 +1,44 @@
-import React from 'react';
-
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useExpenses } from './ExpenseContext';
 
 function ExpenseForm({ expense, onSubmit, onCancel }) {
   const { addExpense, updateExpense } = useExpenses();
   const [formData, setFormData] = useState({
-    date: expense?.date || new Date().toISOString().split('T')[0],
+    date: expense?.date ? new Date(expense.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
     description: expense?.description || '',
     amount: expense?.amount || '',
     category: expense?.category || ''
   });
 
+  useEffect(() => {
+    if (expense) {
+      setFormData({
+        date: expense.date ? new Date(expense.date).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        description: expense.description || '',
+        amount: expense.amount || '',
+        category: expense.category || ''
+      });
+    }
+  }, [expense]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (expense?.id) {
-      updateExpense(expense.id, formData);
+    const updatedExpense = {
+      ...formData,
+      date: new Date(formData.date).toISOString() // Ensure the date is correctly formatted
+    };
+    if (expense?._id) {
+      updateExpense(expense._id, updatedExpense);
     } else {
-      addExpense(formData);
+      addExpense(updatedExpense);
     }
     onSubmit?.();
     setFormData({ date: new Date().toISOString().split('T')[0], description: '', amount: '', category: '' });
@@ -29,8 +50,9 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         <label className="block text-sm font-medium text-white">Date</label>
         <input
           type="date"
+          name="date"
           value={formData.date}
-          onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+          onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required
         />
@@ -39,8 +61,9 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         <label className="block text-sm font-medium text-white">Description</label>
         <input
           type="text"
+          name="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required
         />
@@ -49,8 +72,9 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
         <label className="block text-sm font-medium text-white">Amount</label>
         <input
           type="number"
+          name="amount"
           value={formData.amount}
-          onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+          onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required
         />
@@ -58,8 +82,9 @@ function ExpenseForm({ expense, onSubmit, onCancel }) {
       <div>
         <label className="block text-sm font-medium text-white">Category</label>
         <select
+          name="category"
           value={formData.category}
-          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          onChange={handleChange}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required
         >
