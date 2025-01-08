@@ -36,7 +36,7 @@ function Dashboard() {
             </div>
             <div className="flex items-center">
               <span className="mr-4 text-gray-400">
-                Welcome, {user?.name || user?.email}
+                
               </span>
               <button
                 onClick={handleLogout}

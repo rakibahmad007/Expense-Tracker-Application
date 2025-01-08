@@ -36,15 +36,24 @@ function Reports() {
 
   const handleEdit = async (updatedExpense) => {
     try {
-      console.log(updatedExpense);
+      console.log("Updated Expense Data:", updatedExpense); // Log the payload
+
+      // Check if _id is present and valid
+      if (!updatedExpense._id) {
+        console.error("Expense ID is missing");
+        return;
+      }
+
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `http://localhost:5000/api/expenses/${updatedExpense._id}`,
+        `https://expense-tracker-application-backend-87pi.onrender.com/expenses/${updatedExpense._id}`,
         updatedExpense,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+
+      console.log("Update Response:", response.data); // Log the response
 
       // Replace the existing expense with the updated one
       setExpenses((prevExpenses) =>
@@ -55,6 +64,10 @@ function Reports() {
       setEditingExpense(null); // Close the edit form
     } catch (error) {
       console.error('Error updating expense:', error);
+      if (error.response) {
+        console.error('Server response:', error.response.data);
+        console.error('Status code:', error.response.status);
+      }
     }
   };
 
@@ -62,7 +75,7 @@ function Reports() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'http://localhost:5000/api/expenses',
+        'https://expense-tracker-application-backend-zsy9.onrender.com/api/expenses',
         newExpense,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -80,7 +93,7 @@ function Reports() {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`http://localhost:5000/api/expenses/${id}`, {
+        await axios.delete(`https://expense-tracker-application-backend-zsy9.onrender.com/api/expenses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

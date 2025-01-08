@@ -24,7 +24,7 @@ const Register = () => {
             toast.error('Passwords do not match');
         } else {
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/register', { email, password });
+                const response = await axios.post('https://expense-tracker-application-backend-87pi.onrender.com/api/auth/register', { email, password });
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
                     navigate('/dashboard'); 

@@ -1,6 +1,4 @@
-import React from 'react'
-
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useExpenses } from '../components/Expense/ExpenseContext';
 import { Pie, Bar } from 'react-chartjs-2';
@@ -28,9 +26,22 @@ ChartJS.register(
 function Analytics() {
   const navigate = useNavigate();
   const { expenses } = useExpenses();
-  
+
+  // State for date range filter
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  // Filter expenses based on the selected date range
+  const filteredExpenses = expenses.filter((expense) => {
+    const expenseDate = new Date(expense.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD
+    return (
+      (!startDate || expenseDate >= startDate) &&
+      (!endDate || expenseDate <= endDate)
+    );
+  });
+
   // Group expenses by category
-  const categoryData = expenses.reduce((acc, expense) => {
+  const categoryData = filteredExpenses.reduce((acc, expense) => {
     acc[expense.category] = (acc[expense.category] || 0) + Number(expense.amount);
     return acc;
   }, {});
@@ -51,73 +62,48 @@ function Analytics() {
     ]
   };
 
-  // Calculate monthly totals for the last 6 months
-  const monthlyData = expenses.reduce((acc, expense) => {
-    const date = new Date(expense.date);
-    const monthYear = date.toLocaleString('default', { month: 'short', year: '2-digit' });
-    acc[monthYear] = (acc[monthYear] || 0) + Number(expense.amount);
+  // Calculate daily totals for the last 7 days
+  const today = new Date();
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(today);
+    date.setDate(date.getDate() - i);
+    return date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
+  }).reverse();
+
+  const dailyData = last7Days.reduce((acc, day) => {
+    acc[day] = 0; // Initialize each day with 0
     return acc;
   }, {});
 
-  // Forecast next month's expenses (simple average-based forecast)
-  const monthlyValues = Object.values(monthlyData);
-  const averageExpense = monthlyValues.length > 0 
-    ? monthlyValues.reduce((a, b) => a + b) / monthlyValues.length 
-    : 0;
-
-  const barChartData = {
-    labels: [...Object.keys(monthlyData), 'Next Month (Forecast)'],
-    datasets: [
-      {
-        label: 'Monthly Expenses',
-        data: [...Object.values(monthlyData), averageExpense],
-        backgroundColor: [
-          ...Array(Object.keys(monthlyData).length).fill('#36A2EB'),
-          '#FF6384' // Forecast bar in different color
-        ]
-      }
-    ]
-  };
-
-  const barChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'top',
-      },
-      title: {
-        display: true,
-        text: 'Monthly Expenses & Forecast'
-      }
-    }
-  };
-
-  // Calculate daily totals for the last 7 days
-  const dailyData = expenses.reduce((acc, expense) => {
+  filteredExpenses.forEach((expense) => {
     const date = new Date(expense.date);
     const day = date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
-    acc[day] = (acc[day] || 0) + Number(expense.amount);
-    return acc;
-  }, {});
+    if (last7Days.includes(day)) {
+      dailyData[day] += Number(expense.amount);
+    }
+  });
 
-  // Forecast next week's expenses (simple average-based forecast)
+  // Calculate the average daily expense for the last 7 days
   const dailyValues = Object.values(dailyData);
-  const averageDailyExpense = dailyValues.length > 0 
-    ? dailyValues.reduce((a, b) => a + b) / dailyValues.length 
+  const averageDailyExpense = dailyValues.length > 0
+    ? dailyValues.reduce((a, b) => a + b) / dailyValues.length
     : 0;
 
+  // Generate next week's forecast (simple average-based forecast)
   const nextWeekDates = Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() + i + 1);
     return date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
   });
 
+  const nextWeekForecast = Array(7).fill(Math.max(0, averageDailyExpense)); // Ensure forecast is never negative
+
   const weeklyBarChartData = {
     labels: nextWeekDates,
     datasets: [
       {
         label: 'Predicted Daily Expenses',
-        data: Array(7).fill(averageDailyExpense),
+        data: nextWeekForecast,
         backgroundColor: '#FF6384'
       }
     ]
@@ -157,17 +143,34 @@ function Analytics() {
       </nav>
 
       <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        {/* Date Filter */}
+        <div className="flex space-x-4 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-white">Start Date</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-white">End Date</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="mt-1 block rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
             <h2 className="text-lg font-medium mb-4 text-white">Expense Distribution by Category</h2>
             <div className="aspect-square">
               <Pie data={pieChartData} />
             </div>
-          </div>
-
-          <div className="bg-gray-800 shadow-sm p-6 rounded-lg">
-            <h2 className="text-lg font-medium mb-4 text-white">Monthly Expense Trend & Forecast</h2>
-            <Bar options={barChartOptions} data={barChartData} />
           </div>
 
           <div className="bg-gray-800 shadow-sm p-6 rounded-lg">

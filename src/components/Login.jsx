@@ -20,7 +20,7 @@ const Login = () => {
             toast.error('Required fields');
         } else {
             try {
-                const response = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+                const response = await axios.post('https://expense-tracker-application-backend-87pi.onrender.com/api/auth/login', { email, password });
                 if (response.data.token) {
                     localStorage.setItem('token', response.data.token);
                     login(response.data.token); 
