@@ -90,12 +90,14 @@ const Register = () => {
                         {showPassword ? <IoMdEyeOff className='text-gray-400' /> : <IoMdEye className='text-gray-400' />}
                     </div>
                 </div>
-                <button
-                    onClick={handleRegister}
-                    className='w-full bg-blue-600 text-white py-2 mt-4 uppercase font-semibold hover:bg-blue-700 transition duration-300'
-                >
-                    Register
-                </button>
+                <form onSubmit={handleRegister}>
+    <button
+        type="submit"
+        className='w-full bg-blue-600 text-white py-2 mt-4 uppercase font-semibold hover:bg-blue-700 transition duration-300'
+    >
+        Register
+    </button>
+</form>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>Already registered?</p>
                     <Link to='/login' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer'>Login now</Link>

@@ -9,13 +9,15 @@ export const useExpenses = () => {
 
 export const ExpenseProvider = ({ children }) => {
     const [expenses, setExpenses] = useState([]);
-    const BASE_URL = import.meta.env.VITE_SERVER_URL ;
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const BASE_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:5000';
 
+    // Fetch expenses whenever the token changes
     useEffect(() => {
         const fetchExpenses = async () => {
-            const token = localStorage.getItem('token');
             if (!token) {
                 console.error('No token found. Please log in.');
+                setExpenses([]); // Clear expenses when user logs out
                 return;
             }
             try {
@@ -28,10 +30,9 @@ export const ExpenseProvider = ({ children }) => {
             }
         };
         fetchExpenses();
-    }, [BASE_URL]);
+    }, [BASE_URL, token]); // Dependency on BASE_URL and token
 
     const addExpense = async (expense) => {
-        const token = localStorage.getItem('token');
         if (!token) {
             console.error('No token found. Please log in.');
             return;
@@ -47,7 +48,6 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const updateExpense = async (id, updatedExpense) => {
-        const token = localStorage.getItem('token');
         if (!token) {
             console.error('No token found. Please log in.');
             return;
@@ -63,7 +63,6 @@ export const ExpenseProvider = ({ children }) => {
     };
 
     const deleteExpense = async (id) => {
-        const token = localStorage.getItem('token');
         if (!token) {
             console.error('No token found. Please log in.');
             return;
@@ -78,8 +77,12 @@ export const ExpenseProvider = ({ children }) => {
         }
     };
 
+    const resetExpenses = () => {
+        setExpenses([]);
+    };
+
     return (
-        <ExpenseContext.Provider value={{ expenses, addExpense, updateExpense, deleteExpense }}>
+        <ExpenseContext.Provider value={{ expenses, addExpense, updateExpense, deleteExpense, resetExpenses, setToken }}>
             {children}
         </ExpenseContext.Provider>
     );

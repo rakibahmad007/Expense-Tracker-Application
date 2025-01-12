@@ -46,7 +46,7 @@ function Reports() {
 
       const token = localStorage.getItem('token');
       const response = await axios.put(
-        `https://expense-tracker-application-backend-87pi.onrender.com/expenses/${updatedExpense._id}`,
+        `https://expense-tracker-application-backend-87pi.onrender.com/api/expenses/${updatedExpense._id}`,
         updatedExpense,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -75,7 +75,7 @@ function Reports() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        'https://expense-tracker-application-backend-zsy9.onrender.com/api/expenses',
+        'https://expense-tracker-application-backend-87pi.onrender.com/api/expenses',
         newExpense,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -93,7 +93,7 @@ function Reports() {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://expense-tracker-application-backend-zsy9.onrender.com/api/expenses/${id}`, {
+        await axios.delete(`https://expense-tracker-application-backend-87pi.onrender.com/api/expenses/${id}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

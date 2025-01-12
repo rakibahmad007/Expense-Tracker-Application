@@ -75,7 +75,7 @@ function Analytics() {
     return acc;
   }, {});
 
-  filteredExpenses.forEach((expense) => {
+  expenses.forEach((expense) => {
     const date = new Date(expense.date);
     const day = date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
     if (last7Days.includes(day)) {
@@ -83,20 +83,26 @@ function Analytics() {
     }
   });
 
-  // Calculate the average daily expense for the last 7 days
-  const dailyValues = Object.values(dailyData);
-  const averageDailyExpense = dailyValues.length > 0
-    ? dailyValues.reduce((a, b) => a + b) / dailyValues.length
-    : 0;
+  // Calculate weighted average for the next 7 days
+  const weights = [1, 2, 3, 4, 5, 6, 7]; // Weights for the past 7 days
+  const totalWeight = weights.reduce((a, b) => a + b, 0); // Sum of weights
+  const weightedSum = last7Days.reduce(
+    (sum, day, index) => sum + dailyData[day] * weights[index],
+    0
+  );
+  const weightedAverage = weightedSum / totalWeight;
 
-  // Generate next week's forecast (simple average-based forecast)
+  // Generate distinct next week's forecast with slight randomness
   const nextWeekDates = Array.from({ length: 7 }, (_, i) => {
     const date = new Date();
     date.setDate(date.getDate() + i + 1);
     return date.toLocaleDateString('default', { day: '2-digit', month: 'short' });
   });
 
-  const nextWeekForecast = Array(7).fill(Math.max(0, averageDailyExpense)); // Ensure forecast is never negative
+  const nextWeekForecast = nextWeekDates.map((_, index) => {
+    const randomFactor = (Math.random() - 0.5) * 0.2; // Random fluctuation between -10% to +10%
+    return Math.max(0, weightedAverage * (1 + randomFactor) + index * 0.5); // Add slight variation by index
+  });
 
   const weeklyBarChartData = {
     labels: nextWeekDates,
@@ -104,9 +110,9 @@ function Analytics() {
       {
         label: 'Predicted Daily Expenses',
         data: nextWeekForecast,
-        backgroundColor: '#FF6384'
-      }
-    ]
+        backgroundColor: '#FF6384',
+      },
+    ],
   };
 
   const weeklyBarChartOptions = {
@@ -117,9 +123,9 @@ function Analytics() {
       },
       title: {
         display: true,
-        text: 'Predicted Daily Expenses for Next Week'
-      }
-    }
+        text: 'Predicted Daily Expenses for Next Week',
+      },
+    },
   };
 
   return (

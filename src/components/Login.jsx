@@ -6,34 +6,41 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { useExpenses } from './Expense/ExpenseContext';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { login } = useAuth();
+    const { setToken, resetExpenses } = useExpenses(); // Access methods from ExpenseContext
     const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
         if (!email || !password) {
             toast.error('Required fields');
-        } else {
-            try {
-                const response = await axios.post('https://expense-tracker-application-backend-87pi.onrender.com/api/auth/login', { email, password });
-                if (response.data.token) {
-                    localStorage.setItem('token', response.data.token);
-                    login(response.data.token); 
-                    console.log('Token received. Redirecting to /dashboard...'); 
-                    navigate('/dashboard');
-                } else {
-                    console.error('Login failed: No token received'); 
-                    toast.error('Login failed: No token received');
-                }
-            } catch (error) {
-                console.error('Login error:', error); 
-                toast.error('Login failed: ' + error.message);
+            return;
+        }
+
+        try {
+            const response = await axios.post('https://expense-tracker-application-backend-87pi.onrender.com/api/auth/login', { email, password });
+
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token); // Save token locally
+                resetExpenses(); // Clear previous expenses
+                setToken(response.data.token); // Update token in ExpenseContext
+                login(response.data.token); // Update AuthContext
+                console.log('Token received. Redirecting to /dashboard...');
+                navigate('/dashboard'); // Navigate to dashboard
+            } else {
+                console.error('Login failed: No token received');
+                toast.error('Login failed: No token received');
             }
+        } catch (error) {
+            console.error('Login error:', error);
+            toast.error('Login failed: ' + error.message);
         }
     };
 
@@ -82,7 +89,7 @@ const Login = () => {
                 </form>
                 <div className='flex justify-between w-[100%] mb-4'>
                     <p className='text-sm font-thin text-gray-400'>New here?</p>
-                    <Link to='/register' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer '>Register now</Link>
+                    <Link to='/register' className='text-sm font-thin text-blue-600 hover:underline cursor-pointer'>Register now</Link>
                 </div>
                 <ToastContainer />
             </div>
