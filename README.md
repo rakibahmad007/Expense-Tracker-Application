@@ -11,6 +11,25 @@ Watch a walkthrough of the application features:
 ### Register:
 ![register](https://github.com/user-attachments/assets/b17c34e2-742c-48be-85ee-8156a47cd553)
 
+### Login:
+![login](https://github.com/user-attachments/assets/85efe8ee-5a7b-4e80-a77d-89c2988921cc)
+
+### Dashboard:
+![dashboard](https://github.com/user-attachments/assets/85c1871e-bb16-45e2-8339-1ae4d4e06490)
+
+### Update Function:
+![update](https://github.com/user-attachments/assets/555c39c6-8c8e-457a-99bb-442a7c6c35ea)
+
+### Delete Function:
+![delete](https://github.com/user-attachments/assets/96251d2a-bf12-47a5-864e-201b1ff104fd)
+
+### Reports Page:
+![reports](https://github.com/user-attachments/assets/c0ce66c8-fac0-4ee1-8ac4-72a9865dad09)
+
+### Analytics Page:
+![Screenshot 2025-01-13 20-21-05](https://github.com/user-attachments/assets/aee43c9c-4c18-4926-93f0-25e93ebc4b93)
+
+
 
 ## Features
 ### User Authentication
