@@ -15,7 +15,7 @@ function ExpenseList() {
   const handleDelete = (id) => {
     if (window.confirm('Are you sure you want to delete this expense?')) {
       deleteExpense(id);
-      window.location.reload("true");
+      
     }
   };
 

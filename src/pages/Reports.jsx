@@ -101,6 +101,7 @@ function Reports() {
         setExpenses((prevExpenses) =>
           prevExpenses.filter((expense) => expense._id !== id)
         );
+        
       } catch (error) {
         console.error('Error deleting expense:', error);
       }
