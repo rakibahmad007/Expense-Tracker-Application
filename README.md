@@ -8,6 +8,9 @@ Experience the application live at: https://expense-tracker-application-nine.ver
 Watch a walkthrough of the application features:
 
 ## 📸 Screenshots
+### Register:
+![register](https://github.com/user-attachments/assets/b17c34e2-742c-48be-85ee-8156a47cd553)
+
 
 ## Features
 ### User Authentication
